@@ -96,9 +96,9 @@ function newGuest(toRoom) {
 	// Other guests.
 	else {
 		// Special guests.
-		if (specialGuest[0] < 2 && !checkForGuest(18) && checkForGuest(0) && gamePreMiss < 2) tempList.push(18);
-		if (specialGuest[1] < 2 && !checkForGuest(19) && checkForGuest(12) && gamePreMiss < 2) tempList.push(19);
-		if (specialGuest[2] < 2 && !checkForGuest(20) && checkForGuest(15) && gamePreMiss < 2) tempList.push(20);
+		if (specialGuest[0] < 2 && !checkForGuest(18) && checkForGuest(0) && gamePreMiss == 0) tempList.push(18);
+		if (specialGuest[1] < 2 && !checkForGuest(19) && checkForGuest(12) && gamePreMiss == 0) tempList.push(19);
+		if (specialGuest[2] < 2 && !checkForGuest(20) && checkForGuest(15) && gamePreMiss == 0) tempList.push(20);
 		if (gameLevel > 1 && tempList.length > 0) {
 			console.log("Possible guests: " + tempList);
 			tempSel = Math.round(Math.random() * (tempList.length - 1));
@@ -107,8 +107,8 @@ function newGuest(toRoom) {
 		
 		// Care-based.
 		else {
-			if (gamePreMiss < 2) tJ = 0;
-			else if (gamePreMiss < 4) tJ = 6;
+			if (gamePreMiss == 0) tJ = 0;
+			else if (gamePreMiss == 1) tJ = 6;
 			else tJ = 12;
 			for (j = tJ; j < tJ + 6; j++) {
 				if (!checkForGuest(j)) tempList.push(j);
