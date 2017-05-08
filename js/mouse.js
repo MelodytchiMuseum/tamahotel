@@ -68,6 +68,19 @@ function mouseAct() {
 		}
 	}
 	
+	// Special guest requirements.
+	if (menuName == 0 && menuDisplay == -1) specialGuest[4] += (timeMultDef / timeMult);
+	else if (mouseY < 96 && mouseClick == 2 && specialGuest[7] == 0) {
+		tWR = checkGuestRoom(7);
+		if (tWR > -1) {
+			if (gameRoom[tWR].roomGuest.sleeping) {
+				snd_menu_confirm.play();
+				specialGuest[7] = 1;
+			}
+		}
+	}
+	else if (menuName == -1 && menuDisplay > -1) specialGuest[16] += (timeMultDef / timeMult);
+	
 	// Lift click.
 	if (mouseClick == 2) mouseClick = 1;
 }

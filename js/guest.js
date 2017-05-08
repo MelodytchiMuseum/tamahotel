@@ -29,6 +29,7 @@ function objGuest(room, id) {
 	// Food stuff.
 	this.previousMeal = 2;
 	this.lossDessert = 0;
+	this.previousMidsnack = true;
 	this.previousDessert = false;
 	this.callType = -1;
 	this.callTime = 0;
@@ -56,6 +57,20 @@ function objGuest(room, id) {
 	this.sleepStart.push(22); this.sleepEnd.push(7); // Nano Melodytchi
 	this.sleepStart.push(24); this.sleepEnd.push(11); // USA Nyorotchi
 	this.sleepStart.push(23.25); this.sleepEnd.push(9.25); // Aka Gozarutchi
+	this.sleepStart.push(22); this.sleepEnd.push(7); // My Friend
+	this.sleepStart.push(22); this.sleepEnd.push(7); // Investigator Mero
+	this.sleepStart.push(22.5); this.sleepEnd.push(8); // Jigoku Queen
+	this.sleepStart.push(20); this.sleepEnd.push(6.5); // Super Chama Girl
+	this.sleepStart.push(21.5); this.sleepEnd.push(8.5); // Watawata Kaguya Hime
+	this.sleepStart.push(24); this.sleepEnd.push(11); // Kusatchi
+	this.sleepStart.push(23); this.sleepEnd.push(9); // Masktchi
+	this.sleepStart.push(20.5); this.sleepEnd.push(7); // Young Androtchi
+	this.sleepStart.push(21); this.sleepEnd.push(8.5); // Ura Memetchi
+	this.sleepStart.push(24); this.sleepEnd.push(1); // Peridot
+	this.sleepStart.push(23); this.sleepEnd.push(6); // Foo Fighters
+	this.sleepStart.push(22); this.sleepEnd.push(7); // Meiko
+	this.sleepStart.push(24); this.sleepEnd.push(1); // Probe
+	this.sleepStart.push(20); this.sleepEnd.push(6); // R.Suzuki
 	
 	// Doing stuff.
 	this.guestAct = function() {
@@ -63,6 +78,7 @@ function objGuest(room, id) {
 		if (this.sleeping) {
 			snd_light_switch.play();
 			this.previousMeal = 0;
+			this.previousMidsnack = false;
 			this.previousDessert = false;
 			for (g = 0; g < 6; g++) {
 				if (this.mealLoss[g] > 0) this.mealLoss[g]--;
@@ -79,6 +95,7 @@ function objGuest(room, id) {
 			this.tempInt = (this.sleepStart[this.guestId] - this.sleepEnd[this.guestId]) / 6;
 			if (this.previousMeal < 1 && getTime() >= this.sleepEnd[this.guestId] + (this.tempInt * 1) && gameLevel > 1) {this.serviceCall(0); this.previousMeal = 1;}
 			else if (this.previousMeal < 2 && getTime() >= this.sleepEnd[this.guestId] + (this.tempInt * 2) && gameLevel == 3) {this.serviceCall(0); this.previousMeal = 2;}
+			else if (!this.previousMidsnack && getTime() >= this.sleepEnd[this.guestId] + (this.tempInt * 3) && gameLevel == 3) {this.serviceCall(1); this.previousMidsnack = true;}
 			else if (this.previousMeal < 3 && getTime() >= this.sleepEnd[this.guestId] + (this.tempInt * 4)) {this.serviceCall(0); this.previousMeal = 3;}
 			else if (!this.previousDessert && getTime() >= this.sleepEnd[this.guestId] + (this.tempInt * 5)) {this.serviceCall(1); this.previousDessert = true;}
 			else if (this.lossDessert > 0 && this.foodCarry == -1) {
@@ -92,7 +109,7 @@ function objGuest(room, id) {
 			if (this.callTime > 0) this.callTime--;
 			else {
 				this.callType = -1;
-				this.getCareMiss();
+				if (!noMiss) this.getCareMiss();
 			}
 		}
 		
@@ -149,11 +166,11 @@ function objGuest(room, id) {
 			
 			// Movement.
 			tempDiv = Math.abs(this.targetX - this.x) + Math.abs(this.targetY - this.y);
-			this.x += ((this.targetX - this.x) / tempDiv) / 1.5;
-			this.y += ((this.targetY - this.y) / tempDiv) / 1.5;
+			this.x += ((this.targetX - this.x) / tempDiv) / (1.5 * getTimeMult());
+			this.y += ((this.targetY - this.y) / tempDiv) / (1.5 * getTimeMult());
 			
 			// Snapping.
-			if (Math.sqrt(Math.pow(this.targetX - this.x, 2) + Math.pow(this.targetY - this.y, 2)) < 1) {
+			if (Math.sqrt(Math.pow(this.targetX - this.x, 2) + Math.pow(this.targetY - this.y, 2)) < 1 / getTimeMult()) {
 				this.targetX = this.x;
 				this.targetY = this.y;
 				if (this.careMiss >= 3) {
@@ -215,7 +232,7 @@ function objGuest(room, id) {
 		else if ((foodGet < 10 && this.callType == 0) || (foodGet > 10 && this.callType == 1)) this.callType = -1;
 		else this.foodWant = false;
 		if (foodGet < 10 && this.foodWant) this.mealLoss[foodGet]++;
-		if (this.foodWant) this.specialFood();
+		this.specialFood();
 	}
 	
 	// Throwing garbage away.
@@ -229,8 +246,15 @@ function objGuest(room, id) {
 	// Special guests enabled by food.
 	this.specialFood = function() {
 		if (this.guestId == 0 && this.foodCarry != 0 && this.foodCarry != 11) disableSpecial(0);
-		else if (this.guestId == 12 && this.foodCarry != 4 && this.foodCarry != 5 && this.foodCarry < 10) disableSpecial(1);
-		else if (this.guestId == 15 && this.foodCarry != 12 && this.foodCarry > 10) disableSpecial(2);
+		if (this.guestId == 12 && this.foodCarry != 4 && this.foodCarry != 5 && this.foodCarry < 10) disableSpecial(1);
+		if (this.guestId == 15 && this.foodCarry != 12 && this.foodCarry > 10) disableSpecial(2);
+		if (this.guestId == 1 && this.foodCarry != 1 && this.foodCarry < 10) disableSpecial(5);
+		if (this.foodCarry == 4 && this.foodWant) specialGuest[8]++;
+		if (this.guestId == 9 && this.foodCarry != 9 && this.foodCarry < 10) disableSpecial(10);
+		if (this.guestId == 13 && this.foodCarry != 14 && this.foodCarry != 17 && this.foodCarry > 10) disableSpecial(11);
+		if (this.foodCarry == 8 && this.foodWant) specialGuest[12]++;
+		if (this.foodCarry == 6 && this.foodWant) specialGuest[13]++;
+		if (this.foodCarry == 12 && this.foodWant) specialGuest[14]++;
 	}
 	
 	// Draw.
@@ -240,7 +264,7 @@ function objGuest(room, id) {
 			// Bedsheets.
 			if (!this.sleeping) {
 				if (this.room.stateBed == 1) this.room.stateBed = 2;
-				else this.getCareMiss();
+				else if (!noMiss) this.getCareMiss();
 			}
 		
 			// Dark.
@@ -269,6 +293,7 @@ function objGuest(room, id) {
 		else {
 			// Self.
 			if (gameLevel > 0 && !gameWin && !gameLose) this.guestAct();
+			gameCanvas.context.drawImage(spr_shadow, this.x - 19, this.y - 6);
 			gameCanvas.context.drawImage(spr_guest[this.guestId], this.frameWidth * this.animFrame, this.frameHeight * this.animFlip, this.frameWidth, this.frameHeight, this.x - (this.frameWidth / 2), this.y - this.frameHeight, this.frameWidth, this.frameHeight);
 			if (this.foodCarry > -1) {
 				if (this.animFlip) tempX = this.x - (this.frameWidth / 5) - 32;

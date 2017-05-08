@@ -25,6 +25,8 @@ var gameCanvas = {
             mouseClick = 0;
         })
         window.addEventListener('touchstart', function (e) {
+			mouseX = e.pageX - 12;
+            mouseY = e.pageY - 12;
             mouseClick = 2;
         })
         window.addEventListener('touchend', function (e) {

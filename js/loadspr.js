@@ -53,6 +53,20 @@ spr_guest.push(loadSpr("guest_black"));
 spr_guest.push(loadSpr("guest_nanomero"));
 spr_guest.push(loadSpr("guest_usnyoro"));
 spr_guest.push(loadSpr("guest_akagozaru"));
+spr_guest.push(loadSpr("guest_friend"));
+spr_guest.push(loadSpr("guest_investigator"));
+spr_guest.push(loadSpr("guest_jigoku"));
+spr_guest.push(loadSpr("guest_superchama"));
+spr_guest.push(loadSpr("guest_hime"));
+spr_guest.push(loadSpr("guest_kusa"));
+spr_guest.push(loadSpr("guest_mask"));
+spr_guest.push(loadSpr("guest_youngandro"));
+spr_guest.push(loadSpr("guest_urameme"));
+spr_guest.push(loadSpr("guest_peri"));
+spr_guest.push(loadSpr("guest_cuppy"));
+spr_guest.push(loadSpr("guest_meiko"));
+spr_guest.push(loadSpr("guest_probe"));
+spr_guest.push(loadSpr("guest_suzuki"));
 
 // Items.
 var spr_item = [];
@@ -62,3 +76,6 @@ spr_item.push(loadSpr("item_form3"));
 
 // Maidtchi.
 var spr_maidtchi = loadSpr("maidtchi");
+
+// Shadow.
+var spr_shadow = loadSpr("shadow");
