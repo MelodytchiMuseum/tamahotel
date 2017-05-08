@@ -139,6 +139,7 @@ function newGuest(toRoom) {
 		
 		// Care-based.
 		else {
+			tempList = [];
 			if (gamePreMiss == 0) tJ = 0;
 			else if (gamePreMiss == 1) tJ = 6;
 			else tJ = 12;
